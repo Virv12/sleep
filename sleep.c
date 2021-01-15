@@ -2,12 +2,16 @@
 #include <string.h>
 #include <time.h>
 
-void *syscall();
+int sys_write(unsigned int fd, char const *buf, size_t cnt);
+int sys_nanosleep(struct timespec *rqtp, struct timespec *rmtp);
 
-#define ERROR(msg, code) return syscall(1, 2, msg, strlen(msg)), code // sys_write
+#define PRINT(msg) sys_write(2, msg, strlen(msg))
 
 int main(int argc, char const *argv[]) {
-	if (argc != 2) ERROR("Usage: sleep SECONDS\n", 1);
+	if (argc != 2) {
+		PRINT("Usage: sleep SECONDS\n");
+		return 1;
+	}
 
 	struct timespec a;
 	a.tv_sec = 0;
@@ -44,8 +48,9 @@ state1:
 	}
 
 error:
-	ERROR("Invalid number\n", 2);
+	PRINT("Invalid number\n");
+	return 1;
 
 end:
-	syscall(35, &a, 0); // sys_nanosleep
+	sys_nanosleep(&a, 0);
 }

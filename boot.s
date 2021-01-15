@@ -1,6 +1,6 @@
 .intel_syntax noprefix
 .text
-.globl _start, syscall
+.globl _start, sys_write, sys_nanosleep
 
 _start:
 	pop rdi
@@ -12,12 +12,13 @@ _start:
 	mov rax, 60
 	syscall
 
+sys_write:
+	mov rax, 1
+	jmp syscall
+
+sys_nanosleep:
+	mov rax, 35
+
 syscall:
-	mov rax, rdi
-	mov rdi, rsi
-	mov rsi, rdx
-	mov rdx, rcx
-	mov r10, r8
-	mov r8, r9
 	syscall
 	ret
