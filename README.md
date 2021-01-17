@@ -48,7 +48,7 @@ exit_group(0)                           = ?
 ### Small binary
 ```
 $ du -b ./sleep /bin/sleep
-1016    ./sleep
+1160    ./sleep
 39048   /bin/sleep
 ```
 

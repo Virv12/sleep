@@ -7,9 +7,13 @@ int sys_nanosleep(struct timespec *rqtp, struct timespec *rmtp);
 
 #define PRINT(msg) sys_write(2, msg, strlen(msg))
 
+static char *HELP = "Usage: sleep NUMBER\n"
+					"Pause for NUMBER seconds, NUMBER need not be an integer.\n"
+					"Git repo: <https://github.com/Virv12/sleep>\n";
+
 int main(int argc, char const *argv[]) {
 	if (argc != 2) {
-		PRINT("Usage: sleep SECONDS\n");
+		PRINT(HELP);
 		return 1;
 	}
 
@@ -17,6 +21,11 @@ int main(int argc, char const *argv[]) {
 	struct timespec a;
 	a.tv_sec = 0;
 	a.tv_nsec = 0;
+
+	if (s[0] == '-' && s[1] == 'h' && s[2] == 0) {
+		PRINT(HELP);
+		return 0;
+	}
 
 	for (; '0' <= *s && *s <= '9'; ++s) a.tv_sec = a.tv_sec * 10 + *s - '0';
 
