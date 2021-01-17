@@ -48,8 +48,8 @@ exit_group(0)                           = ?
 ### Small binary
 ```
 $ du -b ./sleep /bin/sleep
-1024    ./sleep
-39048   /bin/sleep             # default arch sleep binary
+1016    ./sleep
+39048   /bin/sleep
 ```
 
 The above measurement is the apparent size, as modern file systems allocate memory in blocks of 4096 bytes, further reducing the size won't actually change the disk usage reported below.
