@@ -10,7 +10,7 @@ exit(0)                                 = ?
 +++ exited with 0 +++
 ```
 
-Compared to an empty C program
+Compared to an empty C program compiled with gcc
 ```
 $ strace ./a.out
 execve("./a.out", ["./a.out"], 0x7ffe2f0aa150 /* 40 vars */) = 0
@@ -47,17 +47,19 @@ exit_group(0)                           = ?
 
 ### Small binary
 ```
-$ du -b ./sleep /bin/sleep
+$ du -b ./sleep /bin/sleep ./a.out
 1160    ./sleep
-39048   /bin/sleep
+39048   /bin/sleep             # default arch sleep binary
+14184   ./a.out                # empty C program compiled with gcc
 ```
 
 The above measurement is the apparent size, as modern file systems allocate memory in blocks of 4096 bytes, further reducing the size won't actually change the disk usage reported below.
 
 ```
-$ du -B1 ./sleep /bin/sleep
+$ du -B1 ./sleep /bin/sleep ./a.out
 4096    ./sleep
 40960   /bin/sleep             # default arch sleep binary
+16384   ./a.out                # empty C program compiled with gcc
 ```
 
 # Compilation

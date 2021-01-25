@@ -5,6 +5,7 @@
 int sys_write(unsigned int fd, char const *buf, size_t cnt);
 int sys_nanosleep(struct timespec *rqtp, struct timespec *rmtp);
 
+// (ab)using compiler, strlen is not defined but compiler will optimize it away
 #define PRINT(msg) sys_write(2, msg, strlen(msg))
 
 static char *HELP = "Usage: sleep NUMBER\n"
