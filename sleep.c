@@ -2,8 +2,22 @@
 #include <string.h>
 #include <time.h>
 
-int sys_write(unsigned int fd, char const *buf, size_t cnt);
-int sys_nanosleep(struct timespec *rqtp, struct timespec *rmtp);
+static long sys_write(int fd, void const *buf, size_t cnt) {
+	long output;
+	__asm__ volatile("syscall" : "=a"(output) : "a"(1), "D"(fd), "S"(buf), "d"(cnt));
+	return output;
+}
+
+static int sys_nanosleep(struct timespec *rqtp, struct timespec *rmtp) {
+	int output;
+	__asm__ volatile("syscall" : "=a"(output) : "a"(35), "D"(rqtp), "S"(rmtp));
+	return output;
+}
+
+static void sys_exit(int status) {
+	__asm__ volatile("syscall" : : "a"(60), "D"(status));
+	__builtin_unreachable();
+}
 
 // (ab)using compiler, strlen is not defined but compiler will optimize it away
 #define PRINT(msg) sys_write(2, msg, strlen(msg))
@@ -18,9 +32,9 @@ int main(int argc, char const *argv[]) {
 		return 1;
 	}
 
-	char const *s = argv[1];
+	char const *	s = argv[1];
 	struct timespec a;
-	a.tv_sec = 0;
+	a.tv_sec  = 0;
 	a.tv_nsec = 0;
 
 	if (s[0] == '-' && s[1] == 'h' && s[2] == 0) {
@@ -44,4 +58,9 @@ int main(int argc, char const *argv[]) {
 	}
 
 	sys_nanosleep(&a, 0);
+	return 0;
+}
+
+void start_main(int argc, char const *argv[]) {
+	sys_exit(main(argc, argv));
 }
