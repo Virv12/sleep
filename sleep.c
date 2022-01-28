@@ -4,18 +4,30 @@
 
 static long sys_write(int fd, void const *buf, size_t cnt) {
 	long output;
-	__asm__ volatile("syscall" : "=a"(output) : "a"(1), "D"(fd), "S"(buf), "d"(cnt));
+	__asm__ volatile(
+			"syscall"
+			: "=a"(output)
+			: "a"(1), "D"(fd), "S"(buf), "d"(cnt)
+			: "rcx", "r11", "memory");
 	return output;
 }
 
 static int sys_nanosleep(struct timespec *rqtp, struct timespec *rmtp) {
 	int output;
-	__asm__ volatile("syscall" : "=a"(output) : "a"(35), "D"(rqtp), "S"(rmtp));
+	__asm__ volatile(
+			"syscall"
+			: "=a"(output)
+			: "a"(35), "D"(rqtp), "S"(rmtp)
+			: "rcx", "r11", "memory");
 	return output;
 }
 
 static void sys_exit(int status) {
-	__asm__ volatile("syscall" : : "a"(60), "D"(status));
+	__asm__ volatile(
+			"syscall"
+			:
+			: "a"(60), "D"(status)
+			: "rcx", "r11");
 	__builtin_unreachable();
 }
 
